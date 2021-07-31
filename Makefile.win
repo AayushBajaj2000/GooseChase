@@ -1,17 +1,17 @@
 # Project: Project1
 # Makefile created by Dev-C++ 5.11
 
-CPP      = g++.exe
-CC       = gcc.exe
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = ../../gooseEscapeMain.o gooseEscapeActor.o gooseEscapeConsole.o gooseEscapeGamePlay.o
-LINKOBJ  = ../../gooseEscapeMain.o gooseEscapeActor.o gooseEscapeConsole.o gooseEscapeGamePlay.o
-LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -L"BearLibTerminal_0.15.7/Windows32" BearLibTerminal.dll BearLibTerminal.lib -m32 -pg
+OBJ      = gooseEscapeMain.o gooseEscapeActor.o gooseEscapeConsole.o gooseEscapeGamePlay.o
+LINKOBJ  = gooseEscapeMain.o gooseEscapeActor.o gooseEscapeConsole.o gooseEscapeGamePlay.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib32" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -L"BearLibTerminal_0.15.7/Windows32" BearLibTerminal.dll BearLibTerminal.lib -m32 -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"BearLibTerminal_0.15.7/Include/C"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"BearLibTerminal_0.15.7/Include/C"
 BIN      = gooseEscape.exe
-CXXFLAGS = $(CXXINCS) -m32 -pg
-CFLAGS   = $(INCS) -m32 -pg
+CXXFLAGS = $(CXXINCS) -m32 -g3
+CFLAGS   = $(INCS) -m32 -g3
 RM       = rm.exe -f
 
 .PHONY: all all-before all-after clean clean-custom
@@ -24,8 +24,8 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
 
-../../gooseEscapeMain.o: ../../gooseEscapeMain.cpp
-	$(CPP) -c ../../gooseEscapeMain.cpp -o ../../gooseEscapeMain.o $(CXXFLAGS)
+gooseEscapeMain.o: gooseEscapeMain.cpp
+	$(CPP) -c gooseEscapeMain.cpp -o gooseEscapeMain.o $(CXXFLAGS)
 
 gooseEscapeActor.o: gooseEscapeActor.cpp
 	$(CPP) -c gooseEscapeActor.cpp -o gooseEscapeActor.o $(CXXFLAGS)

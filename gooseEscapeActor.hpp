@@ -32,6 +32,9 @@ class Actor
     
   // get current health of actor  
     int get_health_int() const;
+   
+  // get current speed of tje actpr 
+    int get_speed() const;
     
   // get current health of actor as as tring so it can be output to the console
     string get_health_message() const;
@@ -42,12 +45,18 @@ class Actor
   // update colour output for the actor
     void update_colour(const char colour0[]);
     
+  // update the speed of the actor
+    void update_speed(int spd);
+    
   // check whether actor can move to new location x + delta_x, y + delta_y
     bool can_move(int delta_x, int delta_y) const;
     
   /* check for whether actor can move, and if so, by defaul clears current location,
      then moves the actor to x + delta_x, y + delta_y, and draws actor */
     void update_location(int delta_x, int delta_y, bool clearCurrentLocation=true);
+    
+    // Used for setting the location of the actor to a certain coordinate.
+    void set_location(int x, int y);
 
   // draws actor at current location
     void put_actor() const;
@@ -56,6 +65,7 @@ class Actor
     int actorChar;  // character to display, stored as int to match BearLibTerminal    
     int location_x, location_y;  // location on the game board
     int health;  // current health
+    int speed; // current speed
     color_t actorColour;
 };
 #endif

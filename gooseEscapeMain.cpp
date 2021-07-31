@@ -2,6 +2,7 @@
 #include <cmath>
 #include <ctime>
 #include <iostream>  // Debugging tip:  You can still use cout to put debug messages on the regular console window
+#include<string> 
 using namespace std;
 #include "gooseEscapeUtil.hpp"
 #include "gooseEscapeActor.hpp"
@@ -38,30 +39,50 @@ int main()
     it make sense to store this information in a file?  Should code be a
     function as well?
 */
-	if(TEN_WALL == 0) // Make a horizontal wall
-	{
-		int length = rand() % 6 + 10;
-		int row = rand() % HEIGHT;
-		int column = rand() % (WIDTH - length);
-		
-		for(int x = 0; x < length; x++){
-			map[row][column + x] = SHALL_NOT_PASS;
-		}
-		
-	}
+	
+	// Making a minimum 10 tile length wall
+	int wallNum = rand() % 2;
+	int tenLength = rand() % 6 + 10;
+	
+	if(wallNum == 0) // Make a horizontal wall
+		generate_wall(map, tenLength, false);
 	else // Make a vertical one
+		generate_wall(map, tenLength, true);	
+	
+
+	// Generating vertical walls with random length
+    for(int wall = 0; wall < VERTICAL_WALLS; wall++)
 	{
-		int length = rand() % 6 + 10;
-		int row = rand() % (HEIGHT - length) ;
-		int column = rand() % WIDTH;
-		
-		for(int x = 0; x < length; x++){
-			map[row][column + x] = SHALL_NOT_PASS;
-		}	
+		int length = rand() % 10 + 1;
+		generate_wall(map,length, true);	
+	}
+    //Generating horizontal walls with random length
+    for(int wall = 0; wall < HORIZONTAL_WALLS; wall++)
+	{
+		int length = rand() % 10 + 1;
+		generate_wall(map,length, false);	
 	}
 	
-    map[10][20] = WINNER;  	
-  	
+	// Adding the winning character to the board
+	int win_row = rand() % 21;
+	int win_col = rand() % WIDTH;
+	map[win_row][win_col] = WINNER;
+	
+	// Adding the powerup character to the board
+	int power_row = rand() % 21;
+	int power_col = rand() % WIDTH;
+	map[power_row][power_col] = POWER;
+	
+	// Adding the teleport tile character to the board
+	int tel_row = rand() % 21;
+	int tel_col = rand() % WIDTH;
+	map[tel_row][tel_col] = TEL_START;
+
+// Adding the second teleport tile character to the board
+	int tel1_row = rand() % 21;
+	int tel1_col = rand() % WIDTH;
+	map[tel1_row][tel1_col] = TEL_END;
+
     // Call the function to print the game board
   	printBoard(map);
 /*
@@ -91,10 +112,13 @@ int main()
     key being pressed.
 */
     int keyEntered = TK_A;  // can be any valid value that is not ESCAPE or CLOSE
+    time_t current_time,power_time; // Getting the time variables
     
     while(keyEntered != TK_ESCAPE && keyEntered != TK_CLOSE 
-                    && !captured(player,monster) ) // ADD THE ISOVER THINGY
+                    && !captured(player,monster) && !isOver(player,win_row,win_col))
 	{
+		current_time = time(NULL); // getting the current time
+
 	    // get player key press
 	    keyEntered = terminal_read();
 
@@ -104,8 +128,17 @@ int main()
     	    movePlayer(keyEntered,player,map);
 	    
     	    // call the goose's chase function
+    	    moveGoose(player,monster, map);
     	    
-    	    // call other functions to do stuff?
+			// Check if player is on the powerup tile
+    	    if(isPower(player,power_row,power_col))
+				power_time = time(NULL); // start the power time
+    	    
+			if(current_time - power_time > 2) // powerup is allowed for only 4 seconds
+				player.update_speed(1); // setting speed to default speed
+    	    
+    	    // Check if the player is on the teleportation tile
+    	    isTeleport(player, tel_row, tel_col, tel1_row, tel1_col);
     	}
   	}
 
@@ -115,7 +148,15 @@ int main()
         out.writeLine("Game has ended");
     
         // Output why:  did the goose get you?  Or did you win?
-	
+		if(isOver(player,win_row,win_col)){
+			out.writeLine("Congrats! You Won");	// printing if the user wins
+			while (terminal_read() != TK_CLOSE);
+		}
+		else if(player.get_x() == monster.get_x() && player.get_y() == monster.get_y()){
+			out.writeLine("Sorry! You Lost");	// printing if the user loses
+			while (terminal_read() != TK_CLOSE);		
+		}
+		
     	// Wait until user closes the window
         while (terminal_read() != TK_CLOSE);
     }
@@ -123,3 +164,4 @@ int main()
 	//game is done, close it  
     terminal_close();
 }
+

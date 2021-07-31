@@ -15,7 +15,8 @@ Actor:: Actor()
     actorChar = int('A');
     location_x = MIN_SCREEN_X;
     location_y = MIN_SCREEN_Y;
-    health = 100;
+    health = 100; // Initialize the health to 100
+    speed = 1; // Initialize the speed to 1
     update_colour(DRAW_COLOUR);
     put_actor();
 }
@@ -26,8 +27,9 @@ Actor:: Actor(char initPlayerChar, int x0, int y0, int health0, const char colou
     location_x = 0;
     location_y = 0;
     update_location(x0,y0,false);
-    update_health(health0);
+    health = health0; // Initialize health
     update_colour(colour0);
+    update_speed(1); // update the speed to 1 -> default
     put_actor();
 }
     
@@ -60,7 +62,12 @@ int Actor:: get_health_int() const
 {
     return health;
 }
-    
+
+int Actor:: get_speed() const
+{
+    return speed;
+}
+
 string Actor:: get_health_message() const
 {
     char buffer[80]={0};
@@ -71,6 +78,11 @@ string Actor:: get_health_message() const
 void Actor:: update_health(int change_in_health)
 {
     health = max(health + change_in_health, 0);  // force health to be positive
+}
+
+void Actor:: update_speed(int spd)
+{
+    speed = spd;  // force health to be positive
 }
 
 void Actor:: update_colour(const char colour0[])
@@ -98,6 +110,14 @@ void Actor:: update_location(int delta_x, int delta_y, bool clearCurrentLocation
         put_actor();
     }
 }
+
+void Actor:: set_location(int x, int y) // Set the location of the actor
+{
+	terminal_clear_area(location_x, location_y, 1, 1); // clear the actor
+	location_x = x; // Set the location to the coordinates
+    location_y = y;
+    put_actor(); // draw the actor
+}  
     
 void Actor:: put_actor() const
 {
